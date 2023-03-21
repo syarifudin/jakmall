@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,5 +19,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('/product')->namespace('App\Http\Controllers')->group(function(){
-    Route::get('product','ReviewsProductController@index');
+    Route::get('review','ReviewsSummaryController@index');
+    Route::resource('product', 'ReviewsProductController');
+
 });

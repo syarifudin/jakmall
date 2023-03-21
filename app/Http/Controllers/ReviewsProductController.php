@@ -11,13 +11,7 @@ class ReviewsProductController extends Controller
      */
     public function index()
     {
-        $products = json_decode(file_get_contents(storage_path() . "/data/reviews.json"), true);
-        $rating=0;
-        foreach ($products as $key => $value) {
-            $total=$key+1;
-            $rating+=$value['rating'];
-        }
-        echo $rating/$total ;
+
     }
 
     /**
@@ -41,7 +35,8 @@ class ReviewsProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = json_decode(file_get_contents(storage_path() . "/data/products.json"), true);
+        print_r( $product);
     }
 
     /**
