@@ -12,9 +12,8 @@ class ReviewsSummaryController extends Controller
         $reviews = json_decode(file_get_contents(storage_path() . "/data/reviews.json"), true);
         $total_reviews = count($reviews);
         $average_rating = array_sum(array_column($reviews, 'rating')) / $total_reviews;
-        $data_reviews=null;
         $cacheKey = 'product_reviews_summary';
-        if (Cache::has($cacheKey)) {
+        if (!Cache::has($cacheKey)) {
             $productReviewsSummary = [];
 
             $count_ratings = array(
@@ -40,7 +39,7 @@ class ReviewsSummaryController extends Controller
 
             Cache::put($cacheKey, $productReviewsSummary,  now()->addminutes(1));
         } else {
-            // Retrieve the cached results
+
             $productReviewsSummary = Cache::get($cacheKey);
         }
         return ($productReviewsSummary);
