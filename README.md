@@ -11,9 +11,9 @@
 1. Reviews Summary
     Controller : ReviewsSummaryController
     http://127.0.0.1:8000/product/review (GET)
-       <a href="#"><img src="{{ storage_path().'/testresult/reviewsSummary.png' }}" alt="" title=""></a>
+       <a href="#"><img src="https://github.com/syarifudin/jakmall/blob/main/storage/testresult/reviewsSummary.png" alt="" title=""></a>
 
 2. Review by Product 
     Controller : ReviewsProductController
     http://127.0.0.1:8000/product/product/1 (GET)
-    <a href="#"><img src="{{ storage_path().'/testresult/reviewsbyid.png' }}" alt="" title=""></a>
+    <a href="#"><img src="https://github.com/syarifudin/jakmall/blob/main/storage/testresult/reviewsbyid.png" alt="" title=""></a>
