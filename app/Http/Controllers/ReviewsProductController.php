@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Cache;
 use Illuminate\Http\Request;
 
 class ReviewsProductController extends Controller
@@ -36,22 +37,26 @@ class ReviewsProductController extends Controller
     {
         $products = json_decode(file_get_contents(storage_path() . "/data/products.json"), true);
         $reviews = json_decode(file_get_contents(storage_path() . "/data/reviews.json"), true);
+        $cacheKeyPrefix = 'product_reviews_summary_';
         $reviews_for_product = array_filter($reviews, function ($review) use ($id) {
             return $review['product_id'] == $id;
         });
         $total_reviews = count($reviews_for_product);
         $average_rating = array_sum(array_column($reviews_for_product, 'rating')) / $total_reviews;
-        $count_ratings = array(
+        $cacheKey = $cacheKeyPrefix . $id;
+        if (!Cache::has($cacheKey)) {
+            $productReviewsSummaryid=[];
+            $count_ratings = array(
                 '5' => 0,
                 '4' => 0,
                 '3' => 0,
                 '2' => 0,
                 '1' => 0,
             );
-        foreach ($reviews_for_product as $review) {
-            $count_ratings[$review['rating']]++;
-        }
-        $data_reviews= array(
+            foreach ($reviews_for_product as $review) {
+                $count_ratings[$review['rating']]++;
+            }
+            $data_reviews= array(
             "total_reviews" => $total_reviews,
             "average_ratings"=> number_format((float)$average_rating, 1, '.', ''),
             "5_star" => $count_ratings['5'] ,
@@ -60,7 +65,13 @@ class ReviewsProductController extends Controller
             "2_star" => $count_ratings['2'] ,
             "1_star" => $count_ratings['1'] ,
         );
-        return ($data_reviews);
+        $productReviewsSummaryid['product '.$id]=$data_reviews;
+            Cache::put($cacheKey, $productReviewsSummaryid, now()->addHours(24));
+        } else {
+            // Retrieve the cached results
+            $productReviewsSummaryid = Cache::get($cacheKey);
+        }
+        return ($productReviewsSummaryid);
     }
 
     /**
