@@ -46,7 +46,7 @@ class ReviewsSummaryController extends Controller
             "2_star" => $rt_2 ,
             "1_star" => $rt_1 ,
         );
-        return json_encode($data_reviews);
+        return ($data_reviews);
     }
 
     /**
