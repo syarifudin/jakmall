@@ -6,45 +6,29 @@ use Illuminate\Http\Request;
 
 class ReviewsSummaryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $reviews = json_decode(file_get_contents(storage_path() . "/data/reviews.json"), true);
-        $rating=0;
-       // Count the total number of reviews
-        $totalCount = count($reviews);
-        // Calculate the average rating of all reviews
-        $sum = 0;
-        $rt_5 = 0;
-        $rt_4 = 0;
-        $rt_3 = 0;
-        $rt_2 = 0;
-        $rt_1 = 0;
-        foreach ($reviews as $key => $review) {
-            $sum += $review['rating'];
-            if($review['rating']==5){
-                $rt_5 =$rt_5 +1;
-            }elseif($review['rating']==4){
-                $rt_4 =$rt_4 +1;
-            }elseif($review['rating']==3){
-                $rt_3 =$rt_3 +1;
-            }elseif($review['rating']==2){
-                $rt_2 =$rt_2 +1;
-            }else{
-                $rt_1 =$rt_1 +1;
-            }
+        $total_reviews = count($reviews);
+        $average_rating = array_sum(array_column($reviews, 'rating')) / $total_reviews;
+        $count_ratings = array(
+            '5' => 0,
+            '4' => 0,
+            '3' => 0,
+            '2' => 0,
+            '1' => 0,
+        );
+        foreach ($reviews as $review) {
+            $count_ratings[$review['rating']]++;
         }
-        $averageRating = $sum / $totalCount;
         $data_reviews= array(
-            "total_reviews" =>  $totalCount,
-            "average_ratings" =>$averageRating,
-            "5_star" => $rt_5 ,
-            "4_star" => $rt_4 ,
-            "3_star" => $rt_3 ,
-            "2_star" => $rt_2 ,
-            "1_star" => $rt_1 ,
+            "total_reviews" => $total_reviews,
+            "average_ratings"=> number_format((float)$average_rating, 1, '.', ''),
+            "5_star" => $count_ratings['5'] ,
+            "4_star" => $count_ratings['4'],
+            "3_star" => $count_ratings['3'] ,
+            "2_star" => $count_ratings['2'] ,
+            "1_star" => $count_ratings['1'] ,
         );
         return ($data_reviews);
     }
