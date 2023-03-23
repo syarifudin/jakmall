@@ -46,17 +46,20 @@ class ReviewsProductController extends Controller
         $cacheKey = $cacheKeyPrefix . $id;
         if (!Cache::has($cacheKey)) {
             $productReviewsSummaryid=[];
-            $count_ratings = array(
+            foreach ($products as $product) {
+                $count_ratings = array(
                 '5' => 0,
                 '4' => 0,
                 '3' => 0,
                 '2' => 0,
                 '1' => 0,
             );
-            foreach ($reviews_for_product as $review) {
-                $count_ratings[$review['rating']]++;
-            }
-            $data_reviews= array(
+                foreach ($reviews_for_product as $review) {
+                    if ($review['product_id'] == $product['id']) {
+                        $count_ratings[$review['rating']]++;
+                    }
+                }
+                $data_reviews= array(
             "total_reviews" => $total_reviews,
             "average_ratings"=> number_format((float)$average_rating, 1, '.', ''),
             "5_star" => $count_ratings['5'] ,
@@ -65,8 +68,9 @@ class ReviewsProductController extends Controller
             "2_star" => $count_ratings['2'] ,
             "1_star" => $count_ratings['1'] ,
         );
-        $productReviewsSummaryid['product '.$id]=$data_reviews;
-            Cache::put($cacheKey, $productReviewsSummaryid, now()->addHours(24));
+                $productReviewsSummaryid['product '.$id]=$data_reviews;
+                Cache::put($cacheKey, $productReviewsSummaryid, now()->addHours(24));
+            }
         } else {
             // Retrieve the cached results
             $productReviewsSummaryid = Cache::get($cacheKey);
