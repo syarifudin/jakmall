@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +17,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::prefix('/product')->namespace('App\Http\Controllers')->group(function(){
-    Route::get('review','ReviewsSummaryController@index');
+Route::prefix('/product')->namespace('App\Http\Controllers')->group(function () {
+    Route::get('review', 'ReviewsSummaryController@index');
     Route::resource('product', 'ReviewsProductController');
-
 });
