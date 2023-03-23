@@ -37,9 +37,8 @@ class ReviewsSummaryController extends Controller
         );
             $productReviewsSummary['review:summary'] =$data_reviews;
 
-            Cache::put($cacheKey, $productReviewsSummary,  now()->addminutes(1));
+            Cache::put($cacheKey, $productReviewsSummary, now()->addminutes(1));
         } else {
-
             $productReviewsSummary = Cache::get($cacheKey);
         }
         return ($productReviewsSummary);
